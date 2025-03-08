@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+              background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">Magazyn</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/products}">Produkty</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/zones}">Strefy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/reservations}">Rezerwacje</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/users}">Użytkownicy</a>
+                </li>
+              </ul>
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/login}">Logowanie</a>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/register}">Rejestracja</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/logout}">Wyloguj się</a>
+                </li>
+            </ul>
+            </div>
+          </div>
+    </nav>
+    <div class="container-fluid px-4 py-4 row justify-content-center">
+        <div class="row align-items-center">
+            <div class="col">
+                <h1 class="display-6 fw-bold">Edytuj produkt</h1>
+            </div>
+        </div>
+        <form th:action="@{/products/edit/{id}(id=${productId})}" th:object="${productDto}" method="post" enctype="multipart/form-data" class="needs-validation mt-3 w-50" novalidate>
+            <div class="mb-2">
+                <label for="name" class="form-label pb-1">Nazwa:</label>
+                <input type="text" id="name" th:field="*{name}" class="form-control" required>
+                <div class="invalid-feedback">Wpisz nazwę produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="category" class="form-label pb-1">Kategoria:</label>
+                <input type="text" id="category" th:field="*{category}" class="form-control" required>
+                <div class="invalid-feedback">Wpisz kategorię produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="description" class="form-label pb-1">Opis:</label>
+                <textarea id="description" th:field="*{description}" class="form-control" required></textarea>
+                <div class="invalid-feedback">Wpisz opis produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="price" class="form-label pb-1">Cena:</label>
+                <input type="number" id="price" th:field="*{price}" step="0.01" class="form-control" required>
+                <div class="invalid-feedback">Wpisz cenę produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="weight" class="form-label pb-1">Waga:</label>
+                <input type="number" id="weight" th:field="*{weight}" step="0.01" class="form-control" required>
+                <div class="invalid-feedback">Wpisz wagę produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="brand" class="form-label pb-1">Marka:</label>
+                <input type="text" id="brand" th:field="*{brand}" class="form-control" required>
+                <div class="invalid-feedback">Wpisz markę produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="quantity" class="form-label pb-1">Ilość:</label>
+                <input type="number" id="quantity" th:field="*{quantity}" class="form-control" required>
+                <div class="invalid-feedback">Wpisz ilość produktu.</div>
+            </div>
+            <div class="mb-2">
+                <label for="image" class="form-label pb-1">Zdjęcie produktu:</label>
+                <input type="file" id="image" name="image" accept="image/*" class="form-control">
+            </div>
+            <br/>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+                <a href="/products" class="btn btn-secondary">Anuluj</a>
+            </div>
+        </form>
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+</body>
+</html>

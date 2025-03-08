@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dodaj produkt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+              background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">Magazyn</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/products}">Produkty</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/zones}">Strefy</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/reservations}">Rezerwacje</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" th:href="@{/users}">Użytkownicy</a>
+                </li>
+              </ul>
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/login}">Logowanie</a>
+                </li>
+                <li class="nav-item" sec:authorize="!isAuthenticated()">
+                    <a class="nav-link" th:href="@{/register}">Rejestracja</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" th:href="@{/logout}">Wyloguj się</a>
+                </li>
+            </ul>
+            </div>
+          </div>
+    </nav>
+<div class="container-fluid px-4 py-4 row justify-content-center">
+    <div class="row align-items-center">
+        <div class="col">
+            <h1 class="display-6 fw-bold">Dodaj nowy produkt</h1>
+        </div>
+    </div>
+    <form th:action="@{/products/add}"
+          th:object="${productDto}"
+          method="post"
+          enctype="multipart/form-data"
+          class="mt-3 w-50">
+
+        <div class="form-group mb-2">
+            <label for="name" class="pb-1">Nazwa</label>
+            <input type="text"
+                   class="form-control"
+                   id="name"
+                   th:field="*{name}"
+                   required>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('name')}"
+                  th:errors="*{name}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="category" class="pb-1">Kategoria</label>
+            <input type="text"
+                   class="form-control"
+                   id="category"
+                   th:field="*{category}"
+                   required>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('category')}"
+                  th:errors="*{category}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="description" class="pb-1">Opis</label>
+            <textarea class="form-control"
+                      id="description"
+                      th:field="*{description}"
+                      rows="3"
+                      required></textarea>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('description')}"
+                  th:errors="*{description}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="price" class="pb-1">Cena</label>
+            <input type="number"
+                   class="form-control"
+                   id="price"
+                   th:field="*{price}"
+                   step="0.01"
+                   required>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('price')}"
+                  th:errors="*{price}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="weight" class="pb-1">Waga (kg)</label>
+            <input type="number"
+                   class="form-control"
+                   id="weight"
+                   th:field="*{weight}"
+                   step="0.01"
+                   required>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('weight')}"
+                  th:errors="*{weight}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="brand" class="pb-1">Marka</label>
+            <input type="text"
+                   class="form-control"
+                   id="brand"
+                   th:field="*{brand}"
+                   required>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('brand')}"
+                  th:errors="*{brand}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="quantity" class="pb-1">Ilość</label>
+            <input type="number"
+                   class="form-control"
+                   id="quantity"
+                   th:field="*{quantity}"
+                   required>
+            <span class="text-danger"
+                  th:if="${#fields.hasErrors('quantity')}"
+                  th:errors="*{quantity}"></span>
+        </div>
+
+        <div class="form-group mb-2">
+            <label for="image" class="pb-1">Zdjęcie produktu</label>
+            <br/>
+            <input type="file"
+                   class="form-control-file pb-3"
+                   id="image"
+                   name="image"
+                   accept="image/*">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Dodaj produkt</button>
+        <a href="/products" class="btn btn-secondary">Anuluj</a>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.3/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
