@@ -19,7 +19,7 @@ import org.springframework.lang.NonNull;
 @EnableWebSecurity
 public class SpringSecurity implements WebMvcConfigurer{
 
-	@Override
+    @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/magazyn/uploads/**")
                 .addResourceLocations("file:magazyn/uploads/");
@@ -43,6 +43,7 @@ public class SpringSecurity implements WebMvcConfigurer{
                         .requestMatchers("/zones", "/zones/add/**", "/zones/edit/**", "/zones/delete/", "/zones/details/**", "/zones/assignProduct/**", "/zones/removeProduct/**").hasAnyRole("ADMIN", "WAREHOUSEMAN", "MANAGER")
                         .requestMatchers("/reservations").hasAnyRole("ADMIN", "WAREHOUSEMAN", "MANAGER")
                         .requestMatchers("/users", "/updateRoles").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/history/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/magazyn/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/main}">
+<head>
+  <title>Historia operacji</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="container mt-4">
+    <h2>Historia operacji</h2>
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Użytkownik</th>
+            <th>Operacja</th>
+            <th>Data i czas</th>
+            <th>Szczegóły</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="historyItem : ${historyList}">
+            <td th:text="${historyItem.id}"></td>
+            <td th:text="${historyItem.userName}"></td>
+            <td th:text="${historyItem.operation}"></td>
+            <td th:text="${#temporals.format(historyItem.timestamp, 'dd-MM-yyyy HH:mm:ss')}"></td>
+            <td th:text="${historyItem.details}"></td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div th:if="${historyList.empty}" class="alert alert-info">
+          Brak historii operacji.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

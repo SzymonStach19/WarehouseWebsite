@@ -5,6 +5,7 @@ import org.example.magazyn.dto.ProductDto;
 import org.example.magazyn.entity.Product;
 import org.example.magazyn.entity.User;
 import org.example.magazyn.repository.ProductRepository;
+import org.example.magazyn.service.HistoryService;
 import org.example.magazyn.service.ProductService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +23,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final HistoryService historyService;
     private final String UPLOAD_DIRECTORY = "magazyn/uploads/products";
 
     @Override
@@ -48,7 +50,16 @@ public class ProductServiceImpl implements ProductService {
             handleProductImage(product, productDto.getImage());
         }
 
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+
+        // Dodanie wpisu do historii
+        historyService.addHistoryEntry(
+                currentUser.getId(),
+                "ADD_PRODUCT",
+                "Dodano produkt: " + product.getName() + ", ID: " + savedProduct.getId()
+        );
+
+        return savedProduct;
     }
 
     @Override
@@ -60,13 +71,27 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         Product product = getProductById(id);
+        String productName = product.getName();
+        Long productId = product.getId();
+        User user = product.getUser();
+
         product.setQuantity(0);
         productRepository.save(product);
+
+        // Dodanie wpisu do historii
+        historyService.addHistoryEntry(
+                user.getId(),
+                "DELETE_PRODUCT",
+                "Usunięto produkt: " + productName + ", ID: " + productId
+        );
     }
 
     @Override
     public Product updateProduct(Long id, ProductDto productDto) throws IOException {
         Product existingProduct = getProductById(id);
+        User user = existingProduct.getUser();
+        String oldName = existingProduct.getName();
+
         updateProductFromDto(existingProduct, productDto);
 
         if (productDto.getImage() != null && !productDto.getImage().isEmpty()) {
@@ -74,9 +99,19 @@ public class ProductServiceImpl implements ProductService {
             handleProductImage(existingProduct, productDto.getImage());
         }
 
-        return productRepository.save(existingProduct);
+        Product updatedProduct = productRepository.save(existingProduct);
+
+        // Dodanie wpisu do historii
+        historyService.addHistoryEntry(
+                user.getId(),
+                "UPDATE_PRODUCT",
+                "Zaktualizowano produkt z \"" + oldName + "\" na \"" + updatedProduct.getName() + "\", ID: " + updatedProduct.getId()
+        );
+
+        return updatedProduct;
     }
 
+    // Pozostałe metody bez zmian...
     private Product mapDtoToProduct(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
