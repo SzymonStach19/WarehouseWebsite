@@ -55,6 +55,7 @@ public class ProductController {
         productDto.setName(product.getName());
         productDto.setCategory(product.getCategory());
         productDto.setDescription(product.getDescription());
+        productDto.setPurchasePrice(product.getPurchasePrice());
         productDto.setPrice(product.getPrice());
         productDto.setWeight(product.getWeight());
         productDto.setBrand(product.getBrand());
