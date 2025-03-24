@@ -3,7 +3,10 @@ package org.example.magazyn.controller;
 import jakarta.validation.Valid;
 import org.example.magazyn.dto.UserDto;
 import org.example.magazyn.entity.User;
+import org.example.magazyn.service.HistoryService;
 import org.example.magazyn.service.UserService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,10 +24,12 @@ import java.util.List;
 @Controller
 public class AuthController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final HistoryService historyService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, HistoryService historyService) {
         this.userService = userService;
+        this.historyService = historyService;
     }
 
     @GetMapping("/")
@@ -71,14 +76,43 @@ public class AuthController {
     }
 
     @PostMapping("/updateRoles")
-    public String updateRoles(@RequestParam Long userId,
-                              @RequestParam(required = false) List<String> roles,
-                              RedirectAttributes redirectAttributes) {
+    public String updateRoles(
+            @RequestParam Long userId,
+            @RequestParam(required = false) List<String> roles,
+            @AuthenticationPrincipal UserDetails currentUser,
+            RedirectAttributes redirectAttributes) {
         try {
             if (roles == null) {
                 roles = new ArrayList<>();
             }
+
+            // Get the target user
+            UserDto targetUserDto = userService.findAllUsers().stream()
+                    .filter(user -> user.getId().equals(userId))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Get the old role
+            String oldRole = targetUserDto.getRole();
+
+            // Get the new role (assuming one role per user for simplicity)
+            String newRole = roles.isEmpty() ? "ROLE_USER" : roles.get(0);
+
+            // Update roles
             userService.updateUserRoles(userId, roles);
+
+            // Get admin user ID
+            User adminUser = userService.findUserByEmail(currentUser.getUsername());
+
+            // Log the role change in history
+            historyService.logUserRoleChange(
+                    adminUser.getId(),
+                    userId,
+                    targetUserDto.getEmail(),
+                    oldRole,
+                    newRole
+            );
+
             redirectAttributes.addFlashAttribute("successMessage", "Roles updated successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Error updating roles: " + e.getMessage());
