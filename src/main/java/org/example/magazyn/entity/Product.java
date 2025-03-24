@@ -28,7 +28,10 @@ public class Product {
     private String description;
 
     @Column(nullable = false)
-    private Double price;
+    private Double price;  // Selling price
+
+    @Column(nullable = false)
+    private Double purchasePrice;  // Purchase price
 
     @Column(nullable = false)
     private Double weight;
@@ -53,4 +56,3 @@ public class Product {
     @JoinColumn(name = "zone_id")
     private Zone zone;
 }
-

@@ -73,8 +73,20 @@
                 <textarea id="description" th:field="*{description}" class="form-control" required></textarea>
                 <div class="invalid-feedback">Wpisz opis produktu.</div>
             </div>
+            <div class="form-group mb-2">
+                <label for="purchasePrice" class="pb-1">Cena Zakupu</label>
+                <input type="number"
+                       class="form-control"
+                       id="purchasePrice"
+                       th:field="*{purchasePrice}"
+                       step="0.01"
+                       required>
+                <span class="text-danger"
+                      th:if="${#fields.hasErrors('purchasePrice')}"
+                      th:errors="*{purchasePrice}"></span>
+            </div>
             <div class="mb-2">
-                <label for="price" class="form-label pb-1">Cena:</label>
+                <label for="price" class="form-label pb-1">Cena Sprzedazy:</label>
                 <input type="number" id="price" th:field="*{price}" step="0.01" class="form-control" required>
                 <div class="invalid-feedback">Wpisz cenę produktu.</div>
             </div>

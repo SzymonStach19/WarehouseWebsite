@@ -21,9 +21,13 @@ public class ProductDto {
     @NotEmpty(message = "Opis jest wymagany")
     private String description;
 
-    @NotNull(message = "Cena jest wymagana")
-    @Min(value = 0, message = "Cena nie może być ujemna")
+    @NotNull(message = "Cena sprzedaży jest wymagana")
+    @Min(value = 0, message = "Cena sprzedaży nie może być ujemna")
     private Double price;
+
+    @NotNull(message = "Cena zakupu jest wymagana")
+    @Min(value = 0, message = "Cena zakupu nie może być ujemna")
+    private Double purchasePrice;
 
     @NotNull(message = "Waga jest wymagana")
     @Min(value = 0, message = "Waga nie może być ujemna")

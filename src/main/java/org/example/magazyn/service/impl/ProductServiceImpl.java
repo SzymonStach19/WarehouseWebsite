@@ -111,13 +111,13 @@ public class ProductServiceImpl implements ProductService {
         return updatedProduct;
     }
 
-    // Pozostałe metody bez zmian...
     private Product mapDtoToProduct(ProductDto productDto) {
         Product product = new Product();
         product.setName(productDto.getName());
         product.setCategory(productDto.getCategory());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
+        product.setPurchasePrice(productDto.getPurchasePrice());
         product.setWeight(productDto.getWeight());
         product.setBrand(productDto.getBrand());
         product.setQuantity(productDto.getQuantity());
@@ -129,6 +129,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(productDto.getCategory());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
+        product.setPurchasePrice(productDto.getPurchasePrice());
         product.setWeight(productDto.getWeight());
         product.setBrand(productDto.getBrand());
         product.setQuantity(productDto.getQuantity());
