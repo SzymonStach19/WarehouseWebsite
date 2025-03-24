@@ -74,6 +74,14 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservation.setStatus(Reservation.ReservationStatus.CANCELLED);
         reservationRepository.save(reservation);
+
+        // Log cancellation to history
+        historyService.logReservationCancellation(
+                currentUser.getId(),
+                reservationId,
+                product.getName(),
+                reservation.getQuantity()
+        );
     }
 
     private ReservationDto convertToDto(Reservation reservation) {
@@ -103,8 +111,21 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rezerwacji"));
 
+        // Get the old status before updating
+        Reservation.ReservationStatus oldStatus = reservation.getStatus();
+
+        // Update status
         reservation.setStatus(status);
         Reservation updatedReservation = reservationRepository.save(reservation);
+
+        // Log status change to history
+        historyService.logReservationStatusChange(
+                updatedReservation.getUser().getId(),
+                reservationId,
+                oldStatus.toString(),
+                status.toString(),
+                updatedReservation.getProduct().getName()
+        );
 
         return convertToDto(updatedReservation);
     }
