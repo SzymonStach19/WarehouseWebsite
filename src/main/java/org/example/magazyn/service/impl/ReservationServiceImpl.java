@@ -8,6 +8,7 @@ import org.example.magazyn.entity.User;
 import org.example.magazyn.repository.ProductRepository;
 import org.example.magazyn.repository.ReservationRepository;
 import org.example.magazyn.service.HistoryService;
+import org.example.magazyn.service.ReportService;
 import org.example.magazyn.service.ReservationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.security.Principal;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ProductRepository productRepository;
     private final HistoryService historyService;
+    private final ReportService reportService;
 
     @Transactional
     public Reservation createReservation(Product product, User user, int quantity) {
@@ -93,6 +96,7 @@ public class ReservationServiceImpl implements ReservationService {
         dto.setQuantity(reservation.getQuantity());
         dto.setReservationDate(reservation.getReservationDate());
         dto.setStatus(reservation.getStatus());
+        dto.setStatusChangedByUser(reservation.getStatusChangedByUser());
         return dto;
     }
 
@@ -107,7 +111,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationDto updateReservationStatus(Long reservationId, Reservation.ReservationStatus status) {
+    public ReservationDto updateReservationStatus(Long reservationId, Reservation.ReservationStatus status, Principal principal) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rezerwacji"));
 
@@ -116,7 +120,20 @@ public class ReservationServiceImpl implements ReservationService {
 
         // Update status
         reservation.setStatus(status);
+
+        // Dodaj informację, kto zmienił status
+        reservation.setStatusChangedByUser(principal.getName());
+
         Reservation updatedReservation = reservationRepository.save(reservation);
+
+        // If status is COMPLETED, generate report
+        if (status == Reservation.ReservationStatus.COMPLETED) {
+            try {
+                reportService.generateReportForReservation(updatedReservation, principal);
+            } catch (Exception e) {
+                throw new RuntimeException("Błąd generowania raportu: " + e.getMessage(), e);
+            }
+        }
 
         // Log status change to history
         historyService.logReservationStatusChange(

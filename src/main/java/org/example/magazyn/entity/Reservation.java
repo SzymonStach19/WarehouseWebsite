@@ -37,6 +37,10 @@ public class Reservation {
     @Column(nullable = false)
     private ReservationStatus status;
 
+    // Nowe pole
+    @Column
+    private String statusChangedByUser;
+
     public enum ReservationStatus {
         ACTIVE,
         COMPLETED,

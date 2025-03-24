@@ -5,6 +5,7 @@ import org.example.magazyn.entity.Product;
 import org.example.magazyn.entity.Reservation;
 import org.example.magazyn.entity.User;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface ReservationService {
@@ -12,6 +13,5 @@ public interface ReservationService {
     List<ReservationDto> getUserReservations(User user);
     List<ReservationDto> getAllReservations();
     void cancelReservation(Long reservationId, User currentUser);
-    ReservationDto updateReservationStatus(Long reservationId, Reservation.ReservationStatus status);
-
+    ReservationDto updateReservationStatus(Long reservationId, Reservation.ReservationStatus status, Principal principal);
 }

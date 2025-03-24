@@ -14,4 +14,5 @@ public class ReservationDto {
     private int quantity;
     private LocalDateTime reservationDate;
     private Reservation.ReservationStatus status;
+    private String statusChangedByUser;
 }
