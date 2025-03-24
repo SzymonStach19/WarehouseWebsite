@@ -28,40 +28,43 @@
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/}">Magazyn</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/products}">Produkty</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/zones}">Strefy</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/reservations}">Rezerwacje</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/users}">Użytkownicy</a>
-            </li>
-          </ul>
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item" sec:authorize="!isAuthenticated()">
-                <a class="nav-link" th:href="@{/login}">Logowanie</a>
-            </li>
-            <li class="nav-item" sec:authorize="!isAuthenticated()">
-                <a class="nav-link" th:href="@{/register}">Rejestracja</a>
-            </li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
-                <a class="nav-link" th:href="@{/logout}">Wyloguj się</a>
-            </li>
-        </ul>
-        </div>
-      </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/}">Magazyn</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/products}">Produkty</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
+          <a class="nav-link" th:href="@{/zones}">Strefy</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
+          <a class="nav-link" th:href="@{/reservations}">Rezerwacje</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+          <a class="nav-link" th:href="@{/users}">Użytkownicy</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
+          <a class="nav-link" th:href="@{/history}">Historia operacji</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" sec:authorize="!isAuthenticated()">
+          <a class="nav-link" th:href="@{/login}">Logowanie</a>
+        </li>
+        <li class="nav-item" sec:authorize="!isAuthenticated()">
+          <a class="nav-link" th:href="@{/register}">Rejestracja</a>
+        </li>
+        <li class="nav-item" sec:authorize="isAuthenticated()">
+          <a class="nav-link" th:href="@{/logout}">Wyloguj się</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
 <br />
 <div class="container mt-4">
