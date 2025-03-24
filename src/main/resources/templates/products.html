@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" xmlns:th="http://www.thymeleaf.org">
+<html lang="pl" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -58,7 +58,8 @@
         <div class="col">
             <h1 class="display-6 fw-bold">Produkty</h1>
         </div>
-        <div class="col-auto">
+        <!-- Add product button only for non-USER roles -->
+        <div class="col-auto" sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
             <a href="/products/add" class="btn btn-primary btn-2g">
                 <i class="bi bi-plus-circle me-3"></i>Dodaj nowy produkt
             </a>
@@ -89,12 +90,12 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div class="col product-item"
-            th:each="product : ${products}"
-            th:if="${product.quantity > 0}"
-            th:data-product-name="${product.name.toLowerCase()}"
-            th:data-product-category="${product.category.toLowerCase()}"
-            th:data-product-brand="${product.brand.toLowerCase()}"
-            th:data-product-price="${product.price}">
+             th:each="product : ${products}"
+             th:if="${product.quantity > 0}"
+             th:data-product-name="${product.name.toLowerCase()}"
+             th:data-product-category="${product.category.toLowerCase()}"
+             th:data-product-brand="${product.brand.toLowerCase()}"
+             th:data-product-price="${product.price}">
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -129,7 +130,8 @@
                         </li>
                     </ul>
                 </div>
-                <div class="card-footer bg-transparent border-0 d-flex justify-content-between">
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between"
+                     sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
                     <a th:href="@{/products/edit/{id}(id=${product.id})}"
                        class="btn btn-warning btn-sm">
                         <i class="bi bi-pencil me-1"></i>Edytuj
