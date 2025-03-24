@@ -36,7 +36,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+        <li class="nav-item" sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN', 'USER')">
           <a class="nav-link" th:href="@{/products}">Produkty</a>
         </li>
         <li class="nav-item" sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
@@ -79,22 +79,45 @@
       <h3>Produkty</h3>
       <p>Zarządzaj stanem magazynowym i kategoriami produktów.</p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 feature-locked">
       <i class="bi bi-grid-3x3-gap display-4"></i>
       <h3>Strefy</h3>
       <p>Przypisuj produkty do wybranych obszarów magazynu.</p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 feature-locked">
       <i class="bi bi-people-fill display-4"></i>
       <h3>Użytkownicy</h3>
       <p>Zarządzaj dostępem i uprawnieniami w systemie.</p>
     </div>
   </div>
 
+  <div class="row text-center mt-4 icon-section">
+    <div class="col-md-6 feature-locked">
+      <i class="bi bi-clock-history display-4"></i>
+      <h3>Historia operacji</h3>
+      <p>Śledź wszystkie działania i zmiany w systemie magazynowym.</p>
+    </div>
+    <div class="col-md-6 feature-locked">
+      <i class="bi bi-bookmark-check display-4"></i>
+      <h3>Rezerwacje</h3>
+      <p>Zarządzaj rezerwacjami produktów i kontroluj ich dostępność.</p>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <p>
+      <i class="bi bi-lock me-2"></i>
+      Aby uzyskać pełen dostęp do systemu,
+      <a href="#" th:href="@{/login}" class="text-primary">zaloguj się</a>
+      lub
+      <a href="#" th:href="@{/register}" class="text-primary">zarejestruj</a>.
+    </p>
+  </div>
+</div>
+
   <div class="mt-5 text-center">
     <p>System magazynowy opracowany w ramach przedmiotu <strong>Tworzenie Aplikacji Bazodanowych</strong>.</p>
   </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">

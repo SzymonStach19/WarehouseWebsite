@@ -22,6 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
+                <li class="nav-item" sec:authorize="hasAnyRole('USER', 'WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
                     <a class="nav-link" th:href="@{/products}">Produkty</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasAnyRole('WAREHOUSEMAN', 'MANAGER', 'ADMIN')">
