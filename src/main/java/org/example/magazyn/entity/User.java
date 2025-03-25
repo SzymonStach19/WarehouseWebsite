@@ -41,4 +41,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Product> products;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<History> historyEntries;
+
 }

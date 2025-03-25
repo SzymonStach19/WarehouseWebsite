@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class History {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "operation")
     private String operation;
@@ -29,4 +29,7 @@ public class History {
 
     @Column(name = "details", columnDefinition = "TEXT")
     private String details;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
 }
