@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.magazyn.dto.ReportDto;
 import org.example.magazyn.entity.Report;
 import org.example.magazyn.entity.Reservation;
+import org.example.magazyn.entity.User;
 import org.example.magazyn.repository.ReportRepository;
 import org.example.magazyn.repository.ReservationRepository;
+import org.example.magazyn.repository.UserRepository;
 import org.example.magazyn.service.ReportService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Value("${app.reports.directory}")
     private String reportsDirectory;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -44,6 +47,11 @@ public class ReportServiceImpl implements ReportService {
         File directory = new File(reportsDirectory);
         if (!directory.exists()) {
             directory.mkdirs();
+        }
+
+        User generatedByUser = userRepository.findByEmail(principal.getName());
+        if (generatedByUser == null) {
+            throw new IllegalArgumentException("Użytkownik nie został znaleziony");
         }
 
         // Generate unique filename
@@ -108,7 +116,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = new Report();
         report.setReservation(reservation);
         report.setFilePath(filePath);
-        report.setGeneratedByUser(principal.getName());
+        report.setGeneratedByUser(generatedByUser);
 
         return reportRepository.save(report);
     }

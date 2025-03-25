@@ -29,8 +29,9 @@ public class Report {
     @Column(nullable = false)
     private LocalDateTime reportGenerationDate;
 
-    @Column(nullable = false)
-    private String generatedByUser;
+    @ManyToOne
+    @JoinColumn(name = "generated_by_user_id", nullable = false)
+    private User generatedByUser;
 
     @PrePersist
     public void prePersist() {

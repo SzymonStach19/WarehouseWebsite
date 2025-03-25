@@ -24,7 +24,7 @@ public class Reservation {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "reserved_by_user_id", nullable = false)
     private User user;
 
     @ManyToOne
