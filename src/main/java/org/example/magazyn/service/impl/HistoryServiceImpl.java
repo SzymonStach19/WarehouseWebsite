@@ -19,7 +19,13 @@ public class HistoryServiceImpl implements HistoryService {
     @Override
     public History addHistoryEntry(Long userId, String operation, String details) {
         History history = new History();
+
+        User user = new User();
+        user.setId(userId);
+
+        history.setUser(user);
         history.setUserId(userId);
+
         history.setOperation(operation);
         history.setTimestamp(LocalDateTime.now());
         history.setDetails(details);
