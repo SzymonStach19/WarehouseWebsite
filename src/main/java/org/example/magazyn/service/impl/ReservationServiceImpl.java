@@ -7,6 +7,7 @@ import org.example.magazyn.entity.Reservation;
 import org.example.magazyn.entity.User;
 import org.example.magazyn.repository.ProductRepository;
 import org.example.magazyn.repository.ReservationRepository;
+import org.example.magazyn.repository.UserRepository;
 import org.example.magazyn.service.HistoryService;
 import org.example.magazyn.service.ReportService;
 import org.example.magazyn.service.ReservationService;
@@ -23,6 +24,7 @@ import java.security.Principal;
 public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
     private final HistoryService historyService;
     private final ReportService reportService;
 
@@ -96,7 +98,14 @@ public class ReservationServiceImpl implements ReservationService {
         dto.setQuantity(reservation.getQuantity());
         dto.setReservationDate(reservation.getReservationDate());
         dto.setStatus(reservation.getStatus());
-        dto.setStatusChangedByUser(reservation.getStatusChangedByUser());
+
+        // Update to handle User type for statusChangedByUser
+        if (reservation.getStatusChangedByUser() != null) {
+            dto.setStatusChangedByUser(reservation.getStatusChangedByUser().getEmail());
+        } else {
+            dto.setStatusChangedByUser(null);
+        }
+
         return dto;
     }
 
@@ -112,6 +121,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public ReservationDto updateReservationStatus(Long reservationId, Reservation.ReservationStatus status, Principal principal) {
+        // Find the current user based on the principal's name
+        User currentUser = userRepository.findByEmail(principal.getName());
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Użytkownik nie został znaleziony");
+        }
+
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono rezerwacji"));
 
@@ -121,8 +136,8 @@ public class ReservationServiceImpl implements ReservationService {
         // Update status
         reservation.setStatus(status);
 
-        // Dodaj informację, kto zmienił status
-        reservation.setStatusChangedByUser(principal.getName());
+        // Set the user who changed the status
+        reservation.setStatusChangedByUser(currentUser);
 
         Reservation updatedReservation = reservationRepository.save(reservation);
 

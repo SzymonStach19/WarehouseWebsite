@@ -89,7 +89,10 @@ public class ReportServiceImpl implements ReportService {
             table.addCell(reservation.getUser().getEmail());
 
             table.addCell("Rezerwacje potwierdzil");
-            table.addCell(reservation.getStatusChangedByUser());
+            // Changed this line to handle the updated statusChangedByUser relationship
+            table.addCell(reservation.getStatusChangedByUser() != null
+                    ? reservation.getStatusChangedByUser().getEmail()
+                    : "Nie dotyczy");
 
             table.addCell("Status rezerwacji");
             table.addCell(reservation.getStatus().toString());
@@ -123,7 +126,12 @@ public class ReportServiceImpl implements ReportService {
         reportDto.setReservationId(reservation.getId());
         reportDto.setFilePath(report.getFilePath());
         reportDto.setReportGenerationDate(report.getReportGenerationDate());
-        reportDto.setGeneratedByUser(reservation.getStatusChangedByUser());
+        // Updated to use the new statusChangedByUser relationship
+        reportDto.setGeneratedByUser(
+                reservation.getStatusChangedByUser() != null
+                        ? reservation.getStatusChangedByUser().getEmail()
+                        : "Nie dotyczy"
+        );
         return reportDto;
     }
 }

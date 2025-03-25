@@ -27,6 +27,10 @@ public class Reservation {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "status_changed_by_user_id")
+    private User statusChangedByUser;
+
     @Column(nullable = false)
     private int quantity;
 
@@ -36,10 +40,6 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus status;
-
-    // Nowe pole
-    @Column
-    private String statusChangedByUser;
 
     public enum ReservationStatus {
         ACTIVE,
