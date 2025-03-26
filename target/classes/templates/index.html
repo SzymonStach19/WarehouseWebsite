@@ -105,7 +105,7 @@
   </div>
 
   <div class="text-center mt-4">
-    <p>
+    <p  sec:authorize="!isAuthenticated()" >
       <i class="bi bi-lock me-2"></i>
       Aby uzyskać pełen dostęp do systemu,
       <a href="#" th:href="@{/login}" class="text-primary">zaloguj się</a>
